@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
@@ -105,4 +106,15 @@ func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) 
 	}
 
 	return nil
+}
+
+func main() {
+	VPPChaincode, err := contractapi.NewChaincode(&SmartContract{})
+	if err != nil {
+		log.Panicf("Error creating VPPChaincode: %v", err)
+	}
+
+	if err := VPPChaincode.Start(); err != nil {
+		log.Panicf("Error starting VPPChaincode: %v", err)
+	}
 }
