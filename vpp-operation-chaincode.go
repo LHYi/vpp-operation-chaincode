@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
@@ -166,34 +167,7 @@ func (s *SmartContract) GetAllDERs(ctx contractapi.TransactionContextInterface) 
 }
 
 // UpdateTime updates an existing asset in the world state with provided parameters.
-func (s *SmartContract) UpdateTime(ctx contractapi.TransactionContextInterface, id string, currentTime string, nextBidTime string) error {
-	assetJSON, err := ctx.GetStub().GetState(id)
-	if err != nil {
-		return fmt.Errorf("failed to read from world state: %v", err)
-	}
-	if assetJSON == nil {
-		return fmt.Errorf("the DER %s does not exist", id)
-	}
-
-	var asset Asset
-	err = json.Unmarshal(assetJSON, &asset)
-	if err != nil {
-		return err
-	}
-
-	asset.CurrentTime = currentTime
-	asset.NextBidTime = nextBidTime
-
-	assetJSON, err = json.Marshal(asset)
-	if err != nil {
-		return err
-	}
-
-	return ctx.GetStub().PutState(id, assetJSON)
-}
-
-// UpdateTime updates an existing asset in the world state with provided parameters.
-func (s *SmartContract) UpdateAllTime(ctx contractapi.TransactionContextInterface, id string, currentTime string, nextBidTime string) error {
+func (s *SmartContract) UpdateTime(ctx contractapi.TransactionContextInterface, currentTime string, nextBidTime string) error {
 	// range query with empty string for startKey and endKey does an
 	// open-ended query of all assets in the chaincode namespace.
 	resultsIterator, err := ctx.GetStub().GetStateByRange("", "")
@@ -202,6 +176,7 @@ func (s *SmartContract) UpdateAllTime(ctx contractapi.TransactionContextInterfac
 	}
 	defer resultsIterator.Close()
 
+	var id string
 	for resultsIterator.HasNext() {
 		queryResponse, err := resultsIterator.Next()
 		if err != nil {
@@ -227,6 +202,59 @@ func (s *SmartContract) UpdateAllTime(ctx contractapi.TransactionContextInterfac
 	}
 
 	return nil
+}
+
+// Update market clearing result to all teh DERs
+func (s *SmartContract) UpdateMarketResult(ctx contractapi.TransactionContextInterface, id string, price_cleared float64, P_cap float64) error {
+	asset, err := s.ReadDER(ctx, id)
+	if err != nil {
+		return err
+	}
+	asset.Price_cleared = price_cleared
+	asset.P_cap = P_cap
+
+	assetJSON, err := json.Marshal(asset)
+	if err != nil {
+		return err
+	}
+
+	return ctx.GetStub().PutState(id, assetJSON)
+}
+
+// Set regulating capacity for each asset
+func (s *SmartContract) UpdateReg(ctx contractapi.TransactionContextInterface, id string, regulationSignal float64, P_reg float64) error {
+	asset, err := s.ReadDER(ctx, id)
+	if err != nil {
+		return err
+	}
+	asset.Regulation_signal = regulationSignal
+	asset.P_reg = P_reg
+	asset.P_mis_1 = math.Max(asset.P_cap*regulationSignal-asset.P_reg, 0)
+
+	assetJSON, err := json.Marshal(asset)
+	if err != nil {
+		return err
+	}
+
+	return ctx.GetStub().PutState(id, assetJSON)
+}
+
+// Update response of the DERs
+func (s *SmartContract) UpdateRes(ctx contractapi.TransactionContextInterface, id string, P_res float64) error {
+	asset, err := s.ReadDER(ctx, id)
+	if err != nil {
+		return err
+	}
+	asset.P_res = P_res
+	asset.P_mis_2 = math.Abs(P_res - asset.P_reg)
+	asset.Uncertainty = asset.Uncertainty + 0.5*asset.P_mis_1 + 0.5*asset.P_mis_2
+
+	assetJSON, err := json.Marshal(asset)
+	if err != nil {
+		return err
+	}
+
+	return ctx.GetStub().PutState(id, assetJSON)
 }
 
 // DERExists returns true when DER with given ID exists in world state
