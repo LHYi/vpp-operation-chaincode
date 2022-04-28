@@ -257,6 +257,9 @@ func (s *SmartContract) UpdateRes(ctx contractapi.TransactionContextInterface, i
 	return ctx.GetStub().PutState(id, assetJSON)
 }
 
+// Update bidding information
+func (s *SmartContract) UpdateBid(ctx contractapi.TransactionContextInterface, id string)
+
 // DERExists returns true when DER with given ID exists in world state
 func (s *SmartContract) DERExists(ctx contractapi.TransactionContextInterface, id string) (bool, error) {
 	assetJSON, err := ctx.GetStub().GetState(id)
