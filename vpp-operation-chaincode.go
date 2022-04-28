@@ -222,7 +222,7 @@ func (s *SmartContract) UpdateMarketResult(ctx contractapi.TransactionContextInt
 }
 
 // Set regulating capacity for each asset
-func (s *SmartContract) UpdateReg(ctx contractapi.TransactionContextInterface, id string, regulationSignal float64, P_reg float64) error {
+func (s *SmartContract) UpdateReg(ctx contractapi.TransactionContextInterface, id string, regulationSignal float64, P_reg float64, price_penalty float64) error {
 	asset, err := s.ReadDER(ctx, id)
 	if err != nil {
 		return err
@@ -230,6 +230,7 @@ func (s *SmartContract) UpdateReg(ctx contractapi.TransactionContextInterface, i
 	asset.Regulation_signal = regulationSignal
 	asset.P_reg = P_reg
 	asset.P_mis_1 = math.Max(asset.P_cap*regulationSignal-asset.P_reg, 0)
+	asset.Price_penalty = price_penalty
 
 	assetJSON, err := json.Marshal(asset)
 	if err != nil {
@@ -258,7 +259,21 @@ func (s *SmartContract) UpdateRes(ctx contractapi.TransactionContextInterface, i
 }
 
 // Update bidding information
-func (s *SmartContract) UpdateBid(ctx contractapi.TransactionContextInterface, id string)
+func (s *SmartContract) UpdateBid(ctx contractapi.TransactionContextInterface, id string, P_cap float64, price_bid float64) error {
+	asset, err := s.ReadDER(ctx, id)
+	if err != nil {
+		return err
+	}
+	asset.P_cap = P_cap
+	asset.Price_bid = price_bid
+
+	assetJSON, err := json.Marshal(asset)
+	if err != nil {
+		return err
+	}
+
+	return ctx.GetStub().PutState(id, assetJSON)
+}
 
 // DERExists returns true when DER with given ID exists in world state
 func (s *SmartContract) DERExists(ctx contractapi.TransactionContextInterface, id string) (bool, error) {
