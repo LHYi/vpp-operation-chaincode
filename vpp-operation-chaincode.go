@@ -253,7 +253,7 @@ func (s *SmartContract) UpdateRes(ctx contractapi.TransactionContextInterface, i
 	asset.P_mis_2 = math.Abs(P_res - asset.P_reg)
 	asset.Uncertainty = asset.Uncertainty + 0.5*asset.P_mis_1 + 0.5*asset.P_mis_2
 	asset.Revenue_mileage = asset.Revenue_mileage + asset.Price_spot*asset.P_res
-	asset.Penalty = asset.Penalty + asset.Price_spot*asset.P_mis_2
+	asset.Penalty = asset.Penalty + asset.Price_spot*(asset.P_cap*asset.Regulation_signal-asset.P_reg-asset.P_comp) + asset.Price_spot*asset.P_mis_2
 
 	assetJSON, err := json.Marshal(asset)
 	if err != nil {
