@@ -24,12 +24,13 @@ type Asset struct {
 	Price_cleared     float64 `json:"Price_cleared"`
 	P_cap             float64 `json:"P_cap"`
 	Regulation_signal float64 `json:"Regulation_signal"`
+	P_comp            float64 `json:"P_comp"`
 	P_reg             float64 `json:"P_reg"`
 	P_res             float64 `json:"P_res"`
 	P_mis_1           float64 `json:"P_mis_1"`
 	P_mis_2           float64 `json:"P_mis_2"`
 	Uncertainty       float64 `json:"Uncertainty"`
-	Price_penalty     float64 `json:"Price_penalty"`
+	Price_spot        float64 `json:"Price_spot"`
 	Revenue_capacity  float64 `json:"Revenue_capacity"`
 	Revenue_mileage   float64 `json:"Revenue_mileage"`
 	Penalty           float64 `json:"Penalty"`
@@ -38,45 +39,45 @@ type Asset struct {
 // InitLedger adds a base set of assets to the ledger
 func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
 	assets := []Asset{
-		{ID: "DER-1-Up", CurrentTime: "04-22-01", NextBidTime: "04-22-03",
-			P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_reg: 0,
-			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_penalty: 0, Revenue_capacity: 0,
+		{ID: "DER-1-Up", CurrentTime: "04-22-01", NextBidTime: "04-22-03", P_available: 0,
+			Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_comp: 0, P_reg: 0,
+			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_spot: 0, Revenue_capacity: 0,
 			Revenue_mileage: 0, Penalty: 0},
-		{ID: "DER-1-Down", CurrentTime: "04-22-01", NextBidTime: "04-22-03",
-			P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_reg: 0,
-			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_penalty: 0, Revenue_capacity: 0,
+		{ID: "DER-1-Down", CurrentTime: "04-22-01", NextBidTime: "04-22-03", P_available: 0,
+			Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_comp: 0, P_reg: 0,
+			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_spot: 0, Revenue_capacity: 0,
 			Revenue_mileage: 0, Penalty: 0},
 		{ID: "DER-2-Up", CurrentTime: "04-22-01", NextBidTime: "04-22-03",
-			P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_reg: 0,
-			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_penalty: 0, Revenue_capacity: 0,
+			P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_comp: 0, P_reg: 0,
+			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_spot: 0, Revenue_capacity: 0,
 			Revenue_mileage: 0, Penalty: 0},
 		{ID: "DER-2-Down", CurrentTime: "04-22-01", NextBidTime: "04-22-03",
-			P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_reg: 0,
-			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_penalty: 0, Revenue_capacity: 0,
+			P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_comp: 0, P_reg: 0,
+			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_spot: 0, Revenue_capacity: 0,
 			Revenue_mileage: 0, Penalty: 0},
 		{ID: "DER-3-Up", CurrentTime: "04-22-01", NextBidTime: "04-22-03",
-			P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_reg: 0,
-			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_penalty: 0, Revenue_capacity: 0,
+			P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_comp: 0, P_reg: 0,
+			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_spot: 0, Revenue_capacity: 0,
 			Revenue_mileage: 0, Penalty: 0},
 		{ID: "DER-3-Down", CurrentTime: "04-22-01", NextBidTime: "04-22-03",
-			P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_reg: 0,
-			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_penalty: 0, Revenue_capacity: 0,
+			P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_comp: 0, P_reg: 0,
+			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_spot: 0, Revenue_capacity: 0,
 			Revenue_mileage: 0, Penalty: 0},
 		{ID: "DER-4-Up", CurrentTime: "04-22-01", NextBidTime: "04-22-03",
-			P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_reg: 0,
-			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_penalty: 0, Revenue_capacity: 0,
+			P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_comp: 0, P_reg: 0,
+			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_spot: 0, Revenue_capacity: 0,
 			Revenue_mileage: 0, Penalty: 0},
 		{ID: "DER-4-Down", CurrentTime: "04-22-01", NextBidTime: "04-22-03",
-			P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_reg: 0,
-			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_penalty: 0, Revenue_capacity: 0,
+			P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_comp: 0, P_reg: 0,
+			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_spot: 0, Revenue_capacity: 0,
 			Revenue_mileage: 0, Penalty: 0},
 		{ID: "DER-5-Up", CurrentTime: "04-22-01", NextBidTime: "04-22-03",
-			P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_reg: 0,
-			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_penalty: 0, Revenue_capacity: 0,
+			P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_comp: 0, P_reg: 0,
+			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_spot: 0, Revenue_capacity: 0,
 			Revenue_mileage: 0, Penalty: 0},
 		{ID: "DER-5-Down", CurrentTime: "04-22-01", NextBidTime: "04-22-03",
-			P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_reg: 0,
-			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_penalty: 0, Revenue_capacity: 0,
+			P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_comp: 0, P_reg: 0,
+			P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_spot: 0, Revenue_capacity: 0,
 			Revenue_mileage: 0, Penalty: 0},
 	}
 
@@ -107,8 +108,8 @@ func (s *SmartContract) AddDER(ctx contractapi.TransactionContextInterface, id s
 
 	asset := Asset{
 		ID: id, CurrentTime: CurrentTime, NextBidTime: NextBidTime,
-		P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_reg: 0,
-		P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_penalty: 0, Revenue_capacity: 0,
+		P_available: 0, Price_bid: 0, Price_cleared: 0, P_cap: 0, Regulation_signal: 0, P_comp: 0, P_reg: 0,
+		P_res: 0, P_mis_1: 0, P_mis_2: 0, Uncertainty: 0, Price_spot: 0, Revenue_capacity: 0,
 		Revenue_mileage: 0, Penalty: 0,
 	}
 	assetJSON, err := json.Marshal(asset)
@@ -212,6 +213,7 @@ func (s *SmartContract) UpdateMarketResult(ctx contractapi.TransactionContextInt
 	}
 	asset.Price_cleared = price_cleared
 	asset.P_cap = P_cap
+	asset.Revenue_capacity = asset.Revenue_capacity + asset.Price_cleared*asset.P_cap
 
 	assetJSON, err := json.Marshal(asset)
 	if err != nil {
@@ -222,15 +224,16 @@ func (s *SmartContract) UpdateMarketResult(ctx contractapi.TransactionContextInt
 }
 
 // Set regulating capacity for each asset
-func (s *SmartContract) UpdateReg(ctx contractapi.TransactionContextInterface, id string, regulationSignal float64, P_reg float64, price_penalty float64) error {
+func (s *SmartContract) UpdateReg(ctx contractapi.TransactionContextInterface, id string, regulationSignal float64, P_comp float64, P_reg float64, Price_spot float64) error {
 	asset, err := s.ReadDER(ctx, id)
 	if err != nil {
 		return err
 	}
 	asset.Regulation_signal = regulationSignal
+	asset.P_comp = P_comp
 	asset.P_reg = P_reg
-	asset.P_mis_1 = math.Max(asset.P_cap*regulationSignal-asset.P_reg, 0)
-	asset.Price_penalty = price_penalty
+	asset.P_mis_1 = math.Max(asset.P_cap*regulationSignal-P_reg, 0)
+	asset.Price_spot = Price_spot
 
 	assetJSON, err := json.Marshal(asset)
 	if err != nil {
@@ -249,6 +252,8 @@ func (s *SmartContract) UpdateRes(ctx contractapi.TransactionContextInterface, i
 	asset.P_res = P_res
 	asset.P_mis_2 = math.Abs(P_res - asset.P_reg)
 	asset.Uncertainty = asset.Uncertainty + 0.5*asset.P_mis_1 + 0.5*asset.P_mis_2
+	asset.Revenue_mileage = asset.Revenue_mileage + asset.Price_spot*asset.P_res
+	asset.Penalty = asset.Penalty + asset.Price_spot*asset.P_mis_2
 
 	assetJSON, err := json.Marshal(asset)
 	if err != nil {
